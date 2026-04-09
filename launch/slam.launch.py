@@ -2,7 +2,6 @@ from launch import LaunchDescription
 from launch_ros.actions import Node
 
 def generate_launch_description():
-    # RTAB-Map parameters
     parameters = [{
         'frame_id': 'base_link',
         'subscribe_depth': True,
@@ -13,12 +12,12 @@ def generate_launch_description():
         'use_sim_time': True
     }]
 
-    # Topic Remappings to match Gazebo D455 outputs
     remappings = [
         ('rgb/image', '/d455/image_raw'),
         ('rgb/camera_info', '/d455/camera_info'),
         ('depth/image', '/d455/depth/image_raw'),
-        ('odom', '/odom')
+        ('odom', '/odom'),
+        ('grid_map', '/map')
     ]
 
     rtabmap_node = Node(
@@ -28,9 +27,7 @@ def generate_launch_description():
         output='screen',
         parameters=parameters,
         remappings=remappings,
-        arguments=['-d']
+        arguments=['-d'] 
     )
 
-    return LaunchDescription([
-        rtabmap_node
-    ])
+    return LaunchDescription([rtabmap_node])
