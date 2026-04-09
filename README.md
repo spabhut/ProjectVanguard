@@ -46,6 +46,12 @@ sudo apt install ros-humble-gazebo-ros-pkgs
 sudo apt install ros-humble-xacro
 ```
 
+### Install RTAB-Map (For 3D SLAM)
+
+```bash
+sudo apt install ros-humble-rtabmap-ros
+```
+
 ---
 
 ## 2. Workspace Setup
