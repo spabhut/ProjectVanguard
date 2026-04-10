@@ -151,19 +151,6 @@
       </link>
     </model>
 
-    <!-- ═══════════════════════════════════════════════════ -->
-    <!--          INNER PARTITION WALLS (with passages)      -->
-    <!--                                                     -->
-    <!--  Horizontal divider at y=1.5 split into 3 segments  -->
-    <!--  with TWO 1.5 m gaps so all compartments reachable: -->
-    <!--                                                     -->
-    <!--  [wall_h_far_left]  GAP-L  [wall_h_mid]  GAP-C  [wall_h_right] -->
-    <!--  x: -5 → -3.5       -3.5→-2.0   -2.0→-0.75    -0.75→0.75   0.75→5 -->
-    <!--                                                     -->
-    <!--  GAP-L (1.5 m) gives access to the upper-left area  -->
-    <!--  GAP-C (1.5 m) is the central passage               -->
-    <!-- ═══════════════════════════════════════════════════ -->
-
     <!-- Far-left segment: x = -5.0 to -3.5  (length 1.5 m) -->
     <model name="wall_h_far_left">
       <static>true</static>

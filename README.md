@@ -52,6 +52,13 @@ sudo apt install ros-humble-xacro
 sudo apt install ros-humble-rtabmap-ros
 ```
 
+### Install Nav2 (For Autonomous Navigation)
+
+```bash
+sudo apt update
+sudo apt install ros-humble-navigation2 ros-humble-nav2-bringup ros-humble-pointcloud-to-laserscan
+```
+
 ---
 
 ## 2. Workspace Setup
@@ -83,23 +90,35 @@ colcon build --symlink-install
 
 ## 3. Running the Simulation
 
-Every time you open a new terminal to run this project, you must source the workspace first.
+Every time you open a new terminal, source the workspace first:
 
 ```bash
 cd ~/rover_ws
 source install/setup.bash
+```
 
-# Launch the simulation
+You will need **three separate terminals** — one for Gazebo, one for SLAM, and one for Nav2.
+
+### Terminal 1 — Gazebo Simulation
+
+```bash
+cd ~/rover_ws && source install/setup.bash
 ros2 launch rover rover.launch.py
 ```
 
-### What to Expect
+### Terminal 2 — SLAM (RTAB-Map)
 
-| # | What Opens | What It Shows |
-|---|-----------|---------------|
-| 1 | **Gazebo Classic** | 6-wheeled rover spawned in an empty world |
-| 2 | **RViz2** | Pre-configured 3D rotatable view |
-| 3 | **RViz2 topics** | Robot model, raw D455 camera feed, live 3D PointCloud |
+```bash
+cd ~/rover_ws && source install/setup.bash
+ros2 launch rover slam.launch.py
+```
+
+### Terminal 3 — Nav2 Navigation Stack
+
+```bash
+cd ~/rover_ws && source install/setup.bash
+ros2 launch rover nav2.launch.py
+```
 
 ---
 
@@ -107,17 +126,26 @@ ros2 launch rover rover.launch.py
 
 ```
 rover/
+├── CMakeLists.txt
+├── package.xml
+├── README.md
+├── config/
+│   └── nav2_params.yaml      # Nav2 navigation parameters
+├── include/
+│   └── rover/                # C++ headers (if any)
 ├── launch/
-│   └── rover.launch.py       # Main launch file
-├── urdf/
-│   └── rover.urdf.xacro      # Robot description with D455 camera
-├── worlds/
-│   └── empty.world           # Default Gazebo world
+│   ├── rover.launch.py       # Gazebo simulation launch
+│   ├── slam.launch.py        # SLAM (RTAB-Map) launch
+│   └── nav2.launch.py        # Nav2 navigation stack launch
 ├── rviz/
 │   └── rover.rviz            # Pre-configured RViz2 layout
-├── config/
-│   └── ...                   # Controller and sensor configs
-└── README.md
+├── scripts/
+│   └── teleop_key.py         # Keyboard teleoperation script
+├── src/                      # C++ source files (if any)
+├── urdf/
+│   └── rover.xacro           # Robot description with D455 camera
+└── worlds/
+    └── rover.world           # Custom Gazebo world
 ```
 
 ---
