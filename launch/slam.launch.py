@@ -6,25 +6,25 @@ def generate_launch_description():
         'frame_id': 'base_link',
         'subscribe_depth': True,
         'subscribe_rgb': True,
+        'subscribe_odom': False,           # KEY FIX — don't subscribe to odom at all
         'approx_sync': True,
         'wait_for_transform': 0.5,
         'Grid/RangeMax': '5.0',
         'use_sim_time': False,
-        'odom_frame_id': '',
-        'visual_odometry': False,
-        'subscribe_odom_info': False,  
+        'odom_frame_id': '',               # no odom frame
+        'subscribe_odom_info': False,
+        'topic_queue_size': 30,
+        'sync_queue_size': 30,
         'Mem/IncrementalMemory': 'true',
         'RGBD/NeighborLinkRefining': 'true',
-        'RGBD/ProximityBySpace': 'true'
+        'RGBD/ProximityBySpace': 'true',
+        'Vis/EstimationType': '1',
     }]
 
-    # Topics based on actual rostopic list output
-    # Camera has double namespace /d455/d455/... due to name+namespace combo
     remappings = [
         ('rgb/image',        '/d455/d455/color/image_raw'),
         ('rgb/camera_info',  '/d455/d455/color/camera_info'),
         ('depth/image',      '/d455/d455/depth/image_rect_raw'),
-        ('odom',             '/odom'),
         ('grid_map',         '/map')
     ]
 
