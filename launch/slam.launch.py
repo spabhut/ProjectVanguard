@@ -9,7 +9,13 @@ def generate_launch_description():
         'approx_sync': True,
         'wait_for_transform': 0.5,
         'Grid/RangeMax': '5.0',
-        'use_sim_time': False
+        'use_sim_time': False,
+        'odom_frame_id': '',
+        'visual_odometry': False,
+        'subscribe_odom_info': False,  
+        'Mem/IncrementalMemory': 'true',
+        'RGBD/NeighborLinkRefining': 'true',
+        'RGBD/ProximityBySpace': 'true'
     }]
 
     # Topics based on actual rostopic list output

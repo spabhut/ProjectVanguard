@@ -276,7 +276,7 @@ Visualization Manager:
 
   Global Options:
     Background Color: 30; 30; 30
-    Fixed Frame: odom
+    Fixed Frame: base_link
     Frame Rate: 30
 
   Name: root
