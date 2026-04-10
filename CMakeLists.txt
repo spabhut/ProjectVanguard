@@ -8,10 +8,9 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(robot_state_publisher REQUIRED)
-find_package(joint_state_publisher REQUIRED)       # NEW — needed for real HW
 find_package(rviz2 REQUIRED)
 find_package(xacro REQUIRED)
-# REMOVED: gazebo_ros, gazebo_plugins
+# joint_state_publisher is Python-only, no find_package needed
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -25,7 +24,6 @@ install(DIRECTORY
   urdf
   config
   rviz
-  # REMOVED: worlds
   DESTINATION share/${PROJECT_NAME}
 )
 
