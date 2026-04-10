@@ -43,41 +43,4 @@
     <child link="camera_depth_frame"/>
     <origin xyz="0 0 0" rpy="-1.5708 0 -1.5708"/>
   </joint>
-
-  <gazebo>
-    <plugin name="diff_drive" filename="libgazebo_ros_diff_drive.so">
-      <num_wheel_pairs>3</num_wheel_pairs>
-      <left_joint>fl_wheel_joint</left_joint>
-      <right_joint>fr_wheel_joint</right_joint>
-      <left_joint>ml_wheel_joint</left_joint>
-      <right_joint>mr_wheel_joint</right_joint>
-      <left_joint>rl_wheel_joint</left_joint>
-      <right_joint>rr_wheel_joint</right_joint>
-      <wheel_separation>0.5</wheel_separation>
-      <wheel_diameter>0.2</wheel_diameter>
-      <max_wheel_torque>20</max_wheel_torque>
-      <max_wheel_acceleration>1.0</max_wheel_acceleration>
-      <publish_odom>true</publish_odom>
-      <publish_odom_tf>true</publish_odom_tf>
-      <publish_wheel_tf>true</publish_wheel_tf>
-      <odometry_frame>odom</odometry_frame>
-      <robot_base_frame>base_link</robot_base_frame>
-    </plugin>
-  </gazebo>
-
-  <gazebo reference="camera_link">
-    <sensor type="depth" name="d455">
-      <update_rate>30.0</update_rate>
-      <camera>
-        <horizontal_fov>1.5184</horizontal_fov>
-        <image><width>1280</width><height>720</height><format>B8G8R8</format></image>
-        <clip><near>0.05</near><far>8.0</far></clip>
-      </camera>
-      <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
-        <frame_name>camera_depth_frame</frame_name>
-        <min_depth>0.1</min_depth>
-        <max_depth>8.0</max_depth>
-      </plugin>
-    </sensor>
-  </gazebo>
 </robot>
