@@ -15,7 +15,7 @@ def generate_launch_description():
             os.path.join(nav2_bringup_dir, 'launch', 'navigation_launch.py')
         ),
         launch_arguments={
-            'use_sim_time': 'true',
+            'use_sim_time': 'false',        # hardware — no simulation clock
             'params_file': params_file
         }.items()
     )

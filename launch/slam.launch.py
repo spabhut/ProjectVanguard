@@ -11,7 +11,7 @@ def generate_launch_description():
         'subscribe_rgb': True,
         'approx_sync': True,
         'wait_for_transform': 1.0,
-        'use_sim_time': True,
+        'use_sim_time': False,          # hardware — no simulation clock
         'qos_image': 2,
         'qos_camera_info': 2,
         'qos_imu': 2,
@@ -21,7 +21,7 @@ def generate_launch_description():
         ('rgb/image',        '/limo/depth_camera_link/image_raw'),
         ('rgb/camera_info',  '/limo/depth_camera_link/camera_info'),
         ('depth/image',      '/limo/depth_camera_link/depth/image_raw'),
-        ('odom',             '/odom'),
+        ('odom',             '/wheel/odom'),    # limo_base remaps odom here
         ('grid_map',         '/map'),
     ]
 
@@ -32,8 +32,7 @@ def generate_launch_description():
         output='screen',
         parameters=parameters,
         remappings=remappings,
-        arguments=['-d'] # -d deletes the old database so you get a fresh map every run
+        arguments=['-d']  # -d deletes old database for a fresh map every run
     )
-
 
     return LaunchDescription([rtabmap_node])
