@@ -5,37 +5,16 @@ from launch_ros.actions import Node
 def generate_launch_description():
 
     parameters = [{
+        # --- Core Setup ---
         'frame_id': 'base_footprint',
         'subscribe_depth': True,
         'subscribe_rgb': True,
         'approx_sync': True,
         'wait_for_transform': 1.0,
-
-        # Sim time
         'use_sim_time': True,
-
-        # Depth camera fix — limo publishes 32-bit float in METERS
-        # Far clip is 10m in xacro, so clamp to that
-        'RGBD/DepthMax': '10.0',
-        'RGBD/DepthMin': '0.1',
-        'Mem/SaveDepth16Format': 'false',       # stay in 32-bit float, do NOT convert to 16-bit
-        'Mem/DepthCompressionFormat': '.png',   # use png compression, not rvl
-
-        # Map update thresholds — low so map builds even with small movement
-        'RGBD/LinearUpdate': '0.01',
-        'RGBD/AngularUpdate': '0.01',
-
-        # Force 2D (ground navigation)
-        'Reg/Force3DoF': 'true',
-
-        # Grid map settings
-        'Grid/RangeMax': '5.0',
-        'Grid/FromDepth': 'true',
-        'Grid/3D': 'false',
-
-        # Odometry covariance override
-        'Odom/ResetCountdown': '1',
-        'Odom/GuessMotion': 'true',
+        'qos_image': 2,
+        'qos_camera_info': 2,
+        'qos_imu': 2,
     }]
 
     remappings = [
@@ -44,7 +23,6 @@ def generate_launch_description():
         ('depth/image',      '/limo/depth_camera_link/depth/image_raw'),
         ('odom',             '/odom'),
         ('grid_map',         '/map'),
-        ('scan',             '/scan'),
     ]
 
     rtabmap_node = Node(
@@ -54,12 +32,8 @@ def generate_launch_description():
         output='screen',
         parameters=parameters,
         remappings=remappings,
-        arguments=['-d']
+        arguments=['-d'] # -d deletes the old database so you get a fresh map every run
     )
 
-    delayed_rtabmap = TimerAction(
-        period=5.0,
-        actions=[rtabmap_node]
-    )
 
-    return LaunchDescription([delayed_rtabmap])
+    return LaunchDescription([rtabmap_node])
