@@ -1,4 +1,4 @@
-# 6-Wheeled Rover — Hardware (Jetson Orin + RealSense D455)
+# 6-Wheeled Rover
 
 A ROS 2 Humble package for a 6-wheeled skid-steer rover running on a **NVIDIA Jetson Orin** with an **Intel RealSense D455** depth camera. This branch has no Gazebo simulation — it runs fully on real hardware.
 
