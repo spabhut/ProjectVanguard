@@ -131,16 +131,12 @@ rover/
 ├── include/
 │   └── rover/                # C++ headers (if any)
 ├── launch/
+│   ├── nav2.launch.py        # Nav2 navigation stack launch
 │   ├── rover.launch.py       # Gazebo simulation launch
-│   ├── slam.launch.py        # SLAM (RTAB-Map) launch
-│   └── nav2.launch.py        # Nav2 navigation stack launch
+│   └── slam.launch.py        # SLAM (RTAB-Map) launch
 ├── rviz/
 │   └── rover.rviz            # Pre-configured RViz2 layout
-├── scripts/
-│   └── teleop_key.py         # Keyboard teleoperation script
 ├── src/                      # C++ source files (if any)
-├── urdf/
-│   └── rover.xacro           # Robot description with D455 camera
 └── worlds/
     └── rover.world           # Custom Gazebo world
 ```
