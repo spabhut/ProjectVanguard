@@ -68,20 +68,17 @@ Once ROS 2 is installed, set up your workspace and clone this repository.
 ```bash
 # Source the base ROS 2 installation
 source /opt/ros/humble/setup.bash
-
 # Create a workspace
 mkdir -p ~/rover_ws/src
 cd ~/rover_ws/src
-
-# Clone the repository
-git clone https://github.com/spabhut/ProjectVanguard.git rover
-
+# Clone the repositories
+git clone -b research https://github.com/spabhut/ProjectVanguard.git rover
+git clone -b research https://github.com/spabhut/limo_ros2.git
 # Install missing dependencies automatically
 cd ~/rover_ws
 rosdep init
 rosdep update
 rosdep install --from-paths src -y --ignore-src
-
 # Build the workspace
 colcon build --symlink-install
 ```
