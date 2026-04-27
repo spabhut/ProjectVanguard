@@ -3,20 +3,25 @@
 <package format="3">
   <name>rover</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <description>Six-wheel rover with RTABMAP SLAM, Nav2, and autonomous exploration</description>
   <maintainer email="spabhut286@gmail.com">spabhut</maintainer>
   <license>TODO: License declaration</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <depend>rclcpp</depend>
-  <depend>gazebo_ros</depend>
-  <depend>gazebo_plugins</depend>
-  <depend>robot_state_publisher</depend>
-  <depend>rviz2</depend>
-  <depend>xacro</depend>
   <depend>rclpy</depend>
   <depend>geometry_msgs</depend>
+  <depend>robot_state_publisher</depend>
+  <depend>xacro</depend>
+  <depend>gazebo_ros</depend>
+  <depend>gazebo_plugins</depend>
+  <depend>rviz2</depend>
+  <depend>rtabmap_ros</depend>
+  <depend>nav2_bringup</depend>
+  <depend>pointcloud_to_laserscan</depend>
+
+  <exec_depend>explore_lite</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

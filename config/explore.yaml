@@ -1,0 +1,30 @@
+explore:
+  ros__parameters:
+    # Must match your nav2_params.yaml robot_base_frame
+    robot_base_frame: base_link
+
+    # Global costmap topics — Nav2 publishes these automatically
+    costmap_topic: /global_costmap/costmap
+    costmap_updates_topic: /global_costmap/costmap_updates
+
+    # Show frontier markers in RViz on /explore/frontiers
+    visualize: true
+
+    # How often (Hz) to compute and send a new frontier goal
+    planner_frequency: 0.33
+
+    # Abandon a goal if no progress made after this many seconds
+    # World is 10x10 m so 45 s is enough; rover max_vel_x is 0.26 m/s
+    progress_timeout: 45.0
+
+    # Frontier scoring weights
+    # Higher potential_scale favours closer frontiers
+    # Higher gain_scale favours larger unexplored areas
+    potential_scale: 3.0
+    gain_scale: 1.0
+
+    # Ignore frontiers smaller than this (metres) to avoid noise
+    min_frontier_size: 0.4
+
+    # Allow extra time for TF lookups (sim time can lag)
+    transform_tolerance: 0.5
