@@ -1,6 +1,8 @@
 # 6-Wheeled Rover Simulation
 
-A complete ROS 2 Humble and Gazebo Classic simulation package for a 6-wheeled skid-steer rover equipped with an Intel RealSense D455 depth camera.
+A complete ROS 2 Humble and Gazebo Classic simulation package for a 6-wheeled skid-steer rover equipped with an Intel RealSense D455 depth camera. Supports manual teleoperation, 3D SLAM via RTAB-Map, autonomous navigation via Nav2, and fully autonomous frontier-based exploration via explore_lite.
+
+---
 
 ## ⚠️ Prerequisites
 
@@ -59,11 +61,39 @@ sudo apt update
 sudo apt install ros-humble-navigation2 ros-humble-nav2-bringup ros-humble-pointcloud-to-laserscan
 ```
 
+### Install explore_lite (For Autonomous Exploration)
+
+> `explore_lite` is not available as an apt package for ROS 2 Humble — it must be built from source.
+
+```bash
+cd ~/rover_ws/src
+git clone https://github.com/robo-friends/m-explore-ros2.git
+
+cd ~/rover_ws
+rosdep install --from-paths src --ignore-src -r -y
+
+# Build the messages package first, then explore_lite
+colcon build --symlink-install --packages-select explore_lite_msgs
+source install/setup.bash
+
+colcon build --symlink-install --packages-select explore_lite
+source install/setup.bash
+```
+
+Verify the build succeeded:
+
+```bash
+ros2 pkg list | grep explore
+# Expected output:
+# explore_lite
+# explore_lite_msgs
+```
+
 ---
 
 ## 2. Workspace Setup
 
-Once ROS 2 is installed, set up your workspace and clone this repository.
+Once all dependencies are installed, set up your workspace and clone this repository.
 
 ```bash
 # Source the base ROS 2 installation
@@ -97,27 +127,116 @@ cd ~/rover_ws
 source install/setup.bash
 ```
 
-You will need **three separate terminals** — one for Gazebo, one for SLAM, and one for Nav2.
+---
 
-### Terminal 1 — Gazebo Simulation
+### Mode A — Manual Teleoperation (3 terminals)
+
+#### Terminal 1 — Gazebo Simulation
 
 ```bash
 cd ~/rover_ws && source install/setup.bash
 ros2 launch rover rover.launch.py
 ```
 
-### Terminal 2 — SLAM (RTAB-Map)
+#### Terminal 2 — SLAM (RTAB-Map)
 
 ```bash
 cd ~/rover_ws && source install/setup.bash
 ros2 launch rover slam.launch.py
 ```
 
-### Terminal 3 — Nav2 Navigation Stack
+#### Terminal 3 — Keyboard Teleoperation
+
+```bash
+cd ~/rover_ws && source install/setup.bash
+ros2 run rover teleop_key
+```
+
+---
+
+### Mode B — Autonomous Navigation with Nav2 (3 terminals)
+
+#### Terminal 1 — Gazebo Simulation
+
+```bash
+cd ~/rover_ws && source install/setup.bash
+ros2 launch rover rover.launch.py
+```
+
+#### Terminal 2 — SLAM (RTAB-Map)
+
+```bash
+cd ~/rover_ws && source install/setup.bash
+ros2 launch rover slam.launch.py
+```
+
+#### Terminal 3 — Nav2 Navigation Stack
 
 ```bash
 cd ~/rover_ws && source install/setup.bash
 ros2 launch rover nav2.launch.py
+```
+
+Use the **2D Goal Pose** tool in RViz to send navigation goals.
+
+---
+
+### Mode C — Autonomous Exploration with explore_lite (4 terminals)
+
+The rover will autonomously explore the entire map using frontier-based exploration. No manual goal-setting needed.
+
+#### Terminal 1 — Gazebo Simulation
+
+```bash
+cd ~/rover_ws && source install/setup.bash
+ros2 launch rover rover.launch.py
+```
+
+#### Terminal 2 — SLAM (RTAB-Map)
+
+```bash
+cd ~/rover_ws && source install/setup.bash
+ros2 launch rover slam.launch.py
+```
+
+#### Terminal 3 — Nav2 Navigation Stack
+
+```bash
+cd ~/rover_ws && source install/setup.bash
+ros2 launch rover nav2.launch.py
+```
+
+#### Terminal 4 — Autonomous Exploration
+
+```bash
+cd ~/rover_ws && source install/setup.bash
+ros2 launch rover explore.launch.py
+```
+
+The rover will now autonomously navigate to frontier boundaries (the edge between known free space and unknown space) until the entire map is explored.
+
+To monitor exploration progress in RViz, add the following displays:
+- **MarkerArray** → `/explore/frontiers` — shows active frontier candidates
+- **Map** → `/map` — the live RTAB-Map occupancy grid
+- **Path** → `/plan` — the current planned path
+
+#### If the rover stops early with "No frontiers found"
+
+This can happen when small unexplored patches are filtered out or lie in the camera's blind spot. Fix it by triggering a spin to expose the rear area:
+
+```bash
+# Option 1 — Nav2 spin behaviour (recommended)
+ros2 action send_goal /spin nav2_msgs/action/Spin "{target_yaw: 3.14}"
+
+# Option 2 — Direct velocity command
+ros2 topic pub --once /cmd_vel geometry_msgs/msg/Twist \
+  "{linear: {x: 0.0}, angular: {z: 0.8}}"
+```
+
+Then relaunch explore_lite in Terminal 4:
+
+```bash
+ros2 launch rover explore.launch.py
 ```
 
 ---
@@ -130,13 +249,15 @@ rover/
 ├── package.xml
 ├── README.md
 ├── config/
-│   └── nav2_params.yaml      # Nav2 navigation parameters
+│   ├── nav2_params.yaml      # Nav2 navigation parameters
+│   └── explore.yaml          # explore_lite frontier exploration parameters
 ├── include/
 │   └── rover/                # C++ headers (if any)
 ├── launch/
 │   ├── rover.launch.py       # Gazebo simulation launch
 │   ├── slam.launch.py        # SLAM (RTAB-Map) launch
-│   └── nav2.launch.py        # Nav2 navigation stack launch
+│   ├── nav2.launch.py        # Nav2 navigation stack launch
+│   └── explore.launch.py     # Autonomous exploration launch
 ├── rviz/
 │   └── rover.rviz            # Pre-configured RViz2 layout
 ├── scripts/
@@ -154,20 +275,43 @@ rover/
 
 **Gazebo doesn't open / crashes immediately**
 ```bash
-# Make sure Gazebo is properly sourced
 source /usr/share/gazebo/setup.sh
 ```
 
 **`colcon build` fails with missing packages**
 ```bash
-# Re-run rosdep to catch any remaining dependencies
 rosdep install --from-paths src -y --ignore-src
 ```
 
 **RViz shows no robot model**
 ```bash
-# Confirm the robot_description topic is being published
 ros2 topic echo /robot_description
+```
+
+**explore_lite fails to build — `explore_lite_msgs` not found**
+```bash
+# Always build the messages package before explore_lite
+colcon build --symlink-install --packages-select explore_lite_msgs
+source install/setup.bash
+colcon build --symlink-install --packages-select explore_lite
+source install/setup.bash
+```
+
+**explore_lite stops immediately — "No frontiers found"**
+
+The `min_frontier_size` in `config/explore.yaml` may be too large for the remaining unexplored area.
+Lower it and relaunch:
+```bash
+# In config/explore.yaml, set:
+# min_frontier_size: 0.1
+ros2 launch rover explore.launch.py
+```
+
+**explore_lite cannot see the area behind the rover**
+
+The D455 camera only faces forward. Spin the rover to bring the rear area into view:
+```bash
+ros2 action send_goal /spin nav2_msgs/action/Spin "{target_yaw: 3.14}"
 ```
 
 ---
