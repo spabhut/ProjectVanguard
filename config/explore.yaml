@@ -20,11 +20,11 @@ explore:
     # Frontier scoring weights
     # Higher potential_scale favours closer frontiers
     # Higher gain_scale favours larger unexplored areas
-    potential_scale: 3.0
-    gain_scale: 1.0
+    potential_scale: 1.5
+    gain_scale: 2.0
 
     # Ignore frontiers smaller than this (metres) to avoid noise
-    min_frontier_size: 0.4
+    min_frontier_size: 0.3
 
     # Allow extra time for TF lookups (sim time can lag)
     transform_tolerance: 0.5
